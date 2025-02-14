@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Sederhana</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #ffccdd;
+            margin: 0;
+        }
+        .calculator {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 300px;
+        }
+        .display {
+            width: 100%;
+            height: 50px;
+            font-size: 2em;
+            text-align: right;
+            margin-bottom: 10px;
+            padding-right: 10px;
+            border: none;
+            background: #d0f0ff;
+            color: #333;
+        }
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 5px;
+        }
+        .buttons button {
+            width: 100%;
+            height: 50px;
+            font-size: 1.5em;
+            cursor: pointer;
+            border: none;
+            background: #ffdde1;
+            border-radius: 5px;
+            color: #333;
+        }
+        .buttons button:active {
+            background: #ffb6c1;
+        }
+        .buttons button.operator {
+            background: #a6d5fa;
+            color: white;
+        }
+        .buttons button.operator:active {
+            background: #6bb9f0;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <input type="text" id="display" class="display" disabled>
+        <div class="buttons">
+            <button onclick="clearDisplay()" class="clear">C</button>
+            <button onclick="backspace()" class="backspace">⌫</button>
+            <button onclick="appendValue('/')" class="operator">/</button>
+            <button onclick="appendValue('*')" class="operator">×</button>
+            <button onclick="appendValue('7')">7</button>
+            <button onclick="appendValue('8')">8</button>
+            <button onclick="appendValue('9')">9</button>
+            <button onclick="appendValue('-')" class="operator">-</button>
+            <button onclick="appendValue('4')">4</button>
+            <button onclick="appendValue('5')">5</button>
+            <button onclick="appendValue('6')">6</button>
+            <button onclick="appendValue('+')" class="operator">+</button>
+            <button onclick="appendValue('1')">1</button>
+            <button onclick="appendValue('2')">2</button>
+            <button onclick="appendValue('3')">3</button>
+            <button onclick="appendPercent()" class="operator">%</button>
+            <button onclick="appendValue('0')">0</button>
+            <button onclick="appendValue('.')">.</button>
+            <button onclick="calculate()" class="operator equal">=</button>
+        </div>
+    </div>
+
+    
+    <script>
+        function appendValue(value) {
+            document.getElementById('display').value += value;
+        }
+        function clearDisplay() {
+            document.getElementById('display').value = '';
+        }
+        function calculate() {
+            try {
+                document.getElementById('display').value = eval(document.getElementById('display').value);
+            } catch {
+                document.getElementById('display').value = 'Error';
+            }
+        }
+        function backspace() {
+            let display = document.getElementById('display');
+            display.value = display.value.slice(0, -1);
+        }
+        function appendPercent() {
+            let display = document.getElementById('display');
+            let expression = display.value;
+            
+            let numbers = expression.split(/([+\-*/])/);
+            let lastNumber = numbers[numbers.length - 1];
+            let prevNumber = numbers.length > 2 ? numbers[numbers.length - 3] : null;
+            let operator = numbers.length > 1 ? numbers[numbers.length - 2] : null;
+            
+            if (!isNaN(lastNumber) && prevNumber && !isNaN(prevNumber)) {
+                let percentValue = (parseFloat(lastNumber) / 100) * parseFloat(prevNumber);
+                numbers[numbers.length - 1] = percentValue;
+                display.value = numbers.join('');
+            } else {
+                display.value = parseFloat(lastNumber) / 100;
+            }
+        }
+    </script>
+</body>
+</html>
